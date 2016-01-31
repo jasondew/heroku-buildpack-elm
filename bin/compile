@@ -42,15 +42,10 @@ mkcd() {
     mkdir -p $1 && cd $1
 }
 
-function write_profile_d_script() {
-  echo "-----> Creating .profile.d script"
-  mkdir -p $build/.profile.d
-  echo "export PATH=\"$binaries:\$PATH\"" > $build/.profile.d/elm_buildpack_path.sh
-}
-
 function write_export_script() {
   echo "-----> Creating export script"
   echo "export PATH=\"$binaries:\$PATH\"" > $buildpack/export
+  echo "export ELM_HOME=/usr/local/lib/node_modules/elm/share" >> $buildpack/export
 }
 
 mkcd $binaries
@@ -62,5 +57,4 @@ download ${S3_URL}/elm/${ELM_VERSION} elm-make
 
 chmod a+x ${binaries}/*
 
-write_profile_d_script
 write_export_script
