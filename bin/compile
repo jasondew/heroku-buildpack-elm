@@ -19,6 +19,7 @@ fi
 
 ELM_VERSION=${ELM_VERSION:-0.16}
 S3_URL=https://s3.amazonaws.com/heroku-buildpack-elm/assets
+binaries=${build}/.platform_tools/elm-${ELM_VERSION}/bin
 
 download() {
            url=$1
@@ -44,26 +45,22 @@ mkcd() {
 function write_profile_d_script() {
   echo "-----> Creating .profile.d script"
   mkdir -p $build/.profile.d
-
-  local export_line="export PATH=\$HOME/.platform_tools/elm-${ELM_VERSION}/bin:\$PATH"
-  echo $export_line >> $build/.profile.d/elm_buildpack_path.sh
+  echo "export PATH=\"$binaries:\$PATH\"" > $build/.profile.d/elm_buildpack_path.sh
 }
 
 function write_export_script() {
   echo "-----> Creating export script"
-
-  local export_line="export PATH=\$HOME/.platform_tools/elm-${ELM_VERSION}/bin:\$PATH"
-  echo $export_line >> $buildpack/export
+  echo "export PATH=\"$binaries:\$PATH\"" > $buildpack/export
 }
 
-mkcd ${build}/.platform_tools/elm-${ELM_VERSION}/bin
+mkcd $binaries
 
 echo "-----> Retrieving ${ELM_VERSION}"
 download ${S3_URL}/elm/${ELM_VERSION} elm
 download ${S3_URL}/elm/${ELM_VERSION} elm-package
 download ${S3_URL}/elm/${ELM_VERSION} elm-make
 
-chmod a+x ${build}/.platform_tools/elm-${ELM_VERSION}/bin/*
+chmod a+x ${binaries}/*
 
 write_profile_d_script
 write_export_script
