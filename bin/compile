@@ -37,20 +37,25 @@ error() {
     exit 1
 }
 
-mkcd()
-{
+mkcd() {
     mkdir -p $1 && cd $1
 }
 
-mkcd ${build}/bin/elm-${ELM_VERSION}
+function write_profile_d_script() {
+  echo "-----> Creating .profile.d with env vars"
+  mkdir -p $build/.profile.d
+
+  local export_line="export PATH=\$HOME/.platform_tools/elm-${ELM_VERSION}/bin:\$PATH"
+  echo $export_line >> $build/.profile.d/elm_buildpack_path.sh
+}
+
+mkcd ${build}/.platform_tools/elm-${ELM_VERSION}/bin
+
 echo "-----> Retrieving ${ELM_VERSION}"
 download ${S3_URL}/elm/${ELM_VERSION} elm
 download ${S3_URL}/elm/${ELM_VERSION} elm-package
 download ${S3_URL}/elm/${ELM_VERSION} elm-make
 
-chmod -R a+x ${build}/bin
+chmod a+x ${build}/.platform_tools/elm-${ELM_VERSION}/bin/*
 
-mkcd ${build}/.profile.d
-cat <<EOF > elm.sh
-export PATH=${build}/bin/elm-${ELM_VERSION}:$PATH
-EOF
+write_profile_d_script
