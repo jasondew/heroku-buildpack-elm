@@ -53,7 +53,7 @@ function write_export_script() {
   echo "-----> Creating export script"
 
   local export_line="export PATH=\$HOME/.platform_tools/elm-${ELM_VERSION}/bin:\$PATH"
-  echo $export_line >> $build/export
+  echo $export_line >> $buildpack/export
 }
 
 mkcd ${build}/.platform_tools/elm-${ELM_VERSION}/bin
