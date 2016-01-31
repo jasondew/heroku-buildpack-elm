@@ -42,11 +42,18 @@ mkcd() {
 }
 
 function write_profile_d_script() {
-  echo "-----> Creating .profile.d with env vars"
+  echo "-----> Creating .profile.d script"
   mkdir -p $build/.profile.d
 
   local export_line="export PATH=\$HOME/.platform_tools/elm-${ELM_VERSION}/bin:\$PATH"
   echo $export_line >> $build/.profile.d/elm_buildpack_path.sh
+}
+
+function write_export_script() {
+  echo "-----> Creating export script"
+
+  local export_line="export PATH=\$HOME/.platform_tools/elm-${ELM_VERSION}/bin:\$PATH"
+  echo $export_line >> $build/export
 }
 
 mkcd ${build}/.platform_tools/elm-${ELM_VERSION}/bin
@@ -59,3 +66,4 @@ download ${S3_URL}/elm/${ELM_VERSION} elm-make
 chmod a+x ${build}/.platform_tools/elm-${ELM_VERSION}/bin/*
 
 write_profile_d_script
+write_export_script
