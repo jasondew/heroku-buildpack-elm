@@ -42,15 +42,15 @@ mkcd()
     mkdir -p $1 && cd $1
 }
 
-mkcd ${cache}/bin/elm-${ELM_VERSION}
+mkcd ${build}/bin/elm-${ELM_VERSION}
 echo "-----> Retrieving ${ELM_VERSION}"
 download ${S3_URL}/elm/${ELM_VERSION} elm
 download ${S3_URL}/elm/${ELM_VERSION} elm-package
 download ${S3_URL}/elm/${ELM_VERSION} elm-make
 
-chmod -R a+x ${cache}/bin
+chmod -R a+x ${build}/bin
 
 mkcd ${build}/.profile.d
 cat <<EOF > elm.sh
-export PATH=${cache}/bin/elm-${ELM_VERSION}:$PATH
+export PATH=${build}/bin/elm-${ELM_VERSION}:$PATH
 EOF
