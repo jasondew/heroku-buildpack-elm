@@ -17,8 +17,8 @@ if test -f ${build}/.buildpack.env; then
     source ${build}/.buildpack.env
 fi
 
-ELM_VERSION=${ELM_VERSION:-0.16}
-S3_URL=https://s3.amazonaws.com/heroku-buildpack-elm/assets
+ELM_VERSION=${ELM_VERSION:-0.17}
+S3_URL=https://s3.amazonaws.com/jasondew
 binaries=${build}/.platform_tools/elm-${ELM_VERSION}/bin
 
 download() {
@@ -44,6 +44,7 @@ mkcd() {
 
 function write_export_script() {
   echo "-----> Creating export script"
+
   echo "export PATH=\"$binaries:\$PATH\"" > $buildpack/export
   echo "export ELM_HOME=/usr/local/lib/node_modules/elm/share" >> $buildpack/export
 }
@@ -51,9 +52,9 @@ function write_export_script() {
 mkcd $binaries
 
 echo "-----> Retrieving ${ELM_VERSION}"
-download ${S3_URL}/elm/${ELM_VERSION} elm
-download ${S3_URL}/elm/${ELM_VERSION} elm-package
-download ${S3_URL}/elm/${ELM_VERSION} elm-make
+download ${S3_URL}/elm-${ELM_VERSION} elm
+download ${S3_URL}/elm-${ELM_VERSION} elm-package
+download ${S3_URL}/elm-${ELM_VERSION} elm-make
 
 chmod a+x ${binaries}/*
 
